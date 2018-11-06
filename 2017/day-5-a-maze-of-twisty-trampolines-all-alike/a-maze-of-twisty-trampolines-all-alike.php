@@ -20,7 +20,6 @@ class MazeSolver
 
         while ($currentIndex < count($steps)) {
             $stepCount++;
-            echo "Current index: $currentIndex point value: $steps[$currentIndex] \n";
             $newIndex = $currentIndex + $steps[$currentIndex];
             $steps[$currentIndex]++;
             $currentIndex = $newIndex;
