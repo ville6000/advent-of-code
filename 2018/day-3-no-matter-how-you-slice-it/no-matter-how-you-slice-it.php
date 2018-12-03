@@ -26,8 +26,8 @@ function doesNotOverlap($diagrams)
     $diagrams = array_map('normalizeDiagram', $diagrams);
     $fabric = [];
     $overlapCount = 0;
-
     $idList = [];
+
     foreach ($diagrams as $diagram) {
         $idList[$diagram['id']] = $diagram['id'];
         $fabric = fillFabric($diagram, $fabric);
