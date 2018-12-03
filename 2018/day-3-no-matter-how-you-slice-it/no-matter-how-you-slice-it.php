@@ -36,8 +36,6 @@ function doesNotOverlap($diagrams)
     foreach ($fabric as $row) {
         foreach ($row as $cell) {
             if (count($cell) > 1) {
-                $overlapCount++;
-
                 foreach ($cell as $item) {
                     unset($idList[$item]);
                 }
