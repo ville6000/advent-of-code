@@ -24,26 +24,37 @@ function overlapCount($diagrams)
 function doesNotOverlap($diagrams)
 {
     $diagrams = array_map('normalizeDiagram', $diagrams);
-    $fabric = [];
-    $overlapCount = 0;
-    $idList = [];
+    $overlapCount = [];
+    $overlapList = [];
 
     foreach ($diagrams as $diagram) {
-        $idList[$diagram['id']] = $diagram['id'];
-        $fabric = fillFabric($diagram, $fabric);
-    }
+        $overlapList[$diagram['id']] = $diagram['id'];
+        $rightLimit = $diagram['left'] + $diagram['width'];
+        $bottomLimit = $diagram['top'] + $diagram['height'];
+        $overlaps = [];
 
-    foreach ($fabric as $row) {
-        foreach ($row as $cell) {
-            if (count($cell) > 1) {
-                foreach ($cell as $item) {
-                    unset($idList[$item]);
+        for ($rowIdx = $diagram['top']; $rowIdx < $bottomLimit; $rowIdx++) {
+            for ($colIdx = $diagram['left']; $colIdx < $rightLimit; $colIdx++) {
+                if (!isset($overlapCount["$rowIdx,$colIdx"])) {
+                    $overlapCount["$rowIdx,$colIdx"] = [];
                 }
+
+                $overlapCount["$rowIdx,$colIdx"][] = $diagram['id'];
+
+                if (count($overlapCount["$rowIdx,$colIdx"]) > 1) {
+                    $overlaps = array_merge($overlaps, $overlapCount["$rowIdx,$colIdx"]);
+                }
+            }
+        }
+
+        if (!empty($overlaps)) {
+            foreach ($overlaps as $item) {
+                unset($overlapList[$item]);
             }
         }
     }
 
-    return implode('', $idList);
+    return implode('', $overlapList);
 }
 
 function normalizeDiagram($diagram)
@@ -59,22 +70,4 @@ function normalizeDiagram($diagram)
         'width' => $area[0],
         'height' => $area[1],
     ];
-}
-
-function fillFabric($diagram, $fabric)
-{
-    $rightLimit = $diagram['left'] + $diagram['width'];
-    $bottomLimit = $diagram['top'] + $diagram['height'];
-
-    for ($rowIdx = $diagram['top']; $rowIdx < $bottomLimit; $rowIdx++) {
-        for ($colIdx = $diagram['left']; $colIdx < $rightLimit; $colIdx++) {
-            if (!isset($fabric[$rowIdx][$colIdx])) {
-                $fabric[$rowIdx][$colIdx] = [];
-            }
-
-            $fabric[$rowIdx][$colIdx][] = $diagram['id'];
-        }
-    }
-
-    return $fabric;
 }
