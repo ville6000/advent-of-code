@@ -72,15 +72,9 @@ function fillFabric($diagram, $fabric)
                 $fabric[$rowIdx][$colIdx] = [];
             }
 
-            $isHorizontalMatch = $colIdx >= $diagram['left'] && $colIdx <= $rightLimit;
-            $isVerticalMatch = $rowIdx >= $diagram['top'] && $rowIdx <= $bottomLimit;
-
-            if ($isHorizontalMatch && $isVerticalMatch) {
-                $fabric[$rowIdx][$colIdx][] = $diagram['id'];
-            }
+            $fabric[$rowIdx][$colIdx][] = $diagram['id'];
         }
     }
 
     return $fabric;
 }
-
