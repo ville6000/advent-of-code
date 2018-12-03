@@ -24,37 +24,34 @@ function overlapCount($diagrams)
 function doesNotOverlap($diagrams)
 {
     $diagrams = array_map('normalizeDiagram', $diagrams);
-    $overlapCount = [];
-    $overlapList = [];
+    $seenCoordinates = [];
+    $idList = [];
 
     foreach ($diagrams as $diagram) {
-        $overlapList[$diagram['id']] = $diagram['id'];
+        $idList[$diagram['id']] = $diagram['id'];
         $rightLimit = $diagram['left'] + $diagram['width'];
         $bottomLimit = $diagram['top'] + $diagram['height'];
-        $overlaps = [];
 
         for ($rowIdx = $diagram['top']; $rowIdx < $bottomLimit; $rowIdx++) {
             for ($colIdx = $diagram['left']; $colIdx < $rightLimit; $colIdx++) {
-                if (!isset($overlapCount["$rowIdx,$colIdx"])) {
-                    $overlapCount["$rowIdx,$colIdx"] = [];
+                if (!isset($seenCoordinates["$rowIdx,$colIdx"])) {
+                    $seenCoordinates["$rowIdx,$colIdx"] = [];
                 }
 
-                $overlapCount["$rowIdx,$colIdx"][] = $diagram['id'];
-
-                if (count($overlapCount["$rowIdx,$colIdx"]) > 1) {
-                    $overlaps = array_merge($overlaps, $overlapCount["$rowIdx,$colIdx"]);
-                }
-            }
-        }
-
-        if (!empty($overlaps)) {
-            foreach ($overlaps as $item) {
-                unset($overlapList[$item]);
+                $seenCoordinates["$rowIdx,$colIdx"][] = $diagram['id'];
             }
         }
     }
 
-    return implode('', $overlapList);
+    foreach($seenCoordinates as $coordinate) {
+        if (count($coordinate) > 1) {
+            foreach ($coordinate as $item) {
+                unset($idList[$item]);
+            }
+        }
+    }
+
+    return implode('', $idList);
 }
 
 function normalizeDiagram($diagram)
