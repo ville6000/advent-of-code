@@ -3,22 +3,22 @@
 function overlapCount($diagrams)
 {
     $diagrams = array_map('normalizeDiagram', $diagrams);
-    $fabric = [];
-    $overlapCount = 0;
+    $overlapCount = [];
 
     foreach ($diagrams as $diagram) {
-        $fabric = fillFabric($diagram, $fabric);
-    }
+        $rightLimit = $diagram['left'] + $diagram['width'];
+        $bottomLimit = $diagram['top'] + $diagram['height'];
 
-    foreach ($fabric as $row) {
-        foreach ($row as $cell) {
-            if (count($cell) > 1) {
-                $overlapCount++;
+        for ($rowIdx = $diagram['top']; $rowIdx < $bottomLimit; $rowIdx++) {
+            for ($colIdx = $diagram['left']; $colIdx < $rightLimit; $colIdx++) {
+                $overlapCount["$rowIdx,$colIdx"]++;
             }
         }
     }
 
-    return $overlapCount;
+    return count(array_filter($overlapCount, function ($item) {
+        return $item > 1;
+    }));
 }
 
 function doesNotOverlap($diagrams)
