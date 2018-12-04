@@ -62,13 +62,8 @@ function calculateSleepMinutes($rows)
         $fallsAsleep = strpos($value, 'asleep') !== false;
 
         if ($fallsAsleep && isset($rows[$key + 1])) {
-            preg_match_all("/\[([^\]]*)\]/", $value, $matches);
-            $date = new DateTime($matches[1][0]);
-            $sleepStart = intval($date->format('i'));
-
-            preg_match_all("/\[([^\]]*)\]/", $rows[$key + 1], $matches);
-            $date = new DateTime($matches[1][0]);
-            $sleepEnd = intval($date->format('i'));
+            $sleepStart = getMinuteFromDateString($value);
+            $sleepEnd = getMinuteFromDateString($rows[$key + 1]);
 
             for ($i = $sleepStart; $i < $sleepEnd; $i++) {
                 if (!isset($minutes[$i])) {
@@ -81,6 +76,14 @@ function calculateSleepMinutes($rows)
     }
 
     return $minutes;
+}
+
+function getMinuteFromDateString($string)
+{
+    preg_match_all("/\[([^\]]*)\]/", $string, $matches);
+    $date = new DateTime($matches[1][0]);
+
+    return intval($date->format('i'));
 }
 
 function getSleepiestGuard($rows)
