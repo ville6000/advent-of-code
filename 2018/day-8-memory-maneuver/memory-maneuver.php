@@ -45,6 +45,25 @@ function calculateMetaTotal($nodes, $total = 0)
     return $total;
 }
 
+function calculateRootNodeValue($nodes, $value = 0)
+{
+    foreach ($nodes as $node) {
+        if ($node->childCount > 0) {
+            foreach ($node->meta as $childKey) {
+                $childKey = $childKey - 1;
+
+                if (isset($node->children[$childKey])) {
+                    $value = calculateRootNodeValue([$node->children[$childKey]], $value);
+                }
+            }
+        } else {
+            $value += array_sum($node->meta);
+        }
+    }
+
+    return $value;
+}
+
 function part1()
 {
     $data = formatInput('input.txt');
@@ -53,4 +72,13 @@ function part1()
     return calculateMetaTotal($nodes);
 }
 
+function part2()
+{
+    $data = formatInput('input.txt');
+    $nodes = createNodes($data);
+
+    return calculateRootNodeValue($nodes);
+}
+
 echo "Part 1: " . part1() . "\n";
+echo "Part 2: " . part2() . "\n";
