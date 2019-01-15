@@ -17,4 +17,18 @@ def part1():
     return total_dimensions
 
 
+def part2():
+    lines = open('./input.txt', 'r')
+    ribbon_length = 0
+
+    for line in lines:
+        dimensions = list(map(int, line.split('x')))
+        dimensions.sort()
+        ribbon_length += dimensions[0] + dimensions[0] + dimensions[1] + dimensions[1]
+        ribbon_length += dimensions[0] * dimensions[1] * dimensions[2]
+
+    return ribbon_length
+
+
 print("Part 1:", part1())
+print("Part 2:", part2())
