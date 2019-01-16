@@ -25,7 +25,12 @@ def part2():
         dimensions = list(map(int, line.split('x')))
         dimensions.sort()
         ribbon_length += dimensions[0] + dimensions[0] + dimensions[1] + dimensions[1]
-        ribbon_length += dimensions[0] * dimensions[1] * dimensions[2]
+
+        product = 1
+        for x in dimensions:
+            product *= x
+
+        ribbon_length += product
 
     return ribbon_length
 
