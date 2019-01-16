@@ -4,32 +4,14 @@ def part1():
     x = y = 0
 
     for direction in directions:
-        if direction == '<':
-            x -= 1
+        x = x - 1 if direction == '<' else x
+        x = x + 1 if direction == '>' else x
+        y = y - 1 if direction == '^' else y
+        y = y + 1 if direction == 'v' else y
 
-        if direction == '>':
-            x += 1
-
-        if direction == '^':
-            y -= 1
-
-        if direction == 'v':
-            y += 1
-
-        grid = increment_grid_value(grid, x, y)
+        grid[f"{x},{y}"] = 1
 
     return len(grid)
-
-
-def increment_grid_value(grid, x, y):
-    key = f"{x},{y}"
-
-    if key in grid:
-        grid[key] += 1
-    else:
-        grid[key] = 1
-
-    return grid
 
 
 def part2():
@@ -39,24 +21,13 @@ def part2():
     santas = {0: {'x': 0, 'y': 0}, 1: {'x': 0, 'y': 0}}
 
     for direction in directions:
-        if direction == '<':
-            santas[turn]['x'] -= 1
+        santas[turn]['x'] = santas[turn]['x'] - 1 if direction == '<' else santas[turn]['x']
+        santas[turn]['x'] = santas[turn]['x'] + 1 if direction == '>' else santas[turn]['x']
+        santas[turn]['y'] = santas[turn]['y'] - 1 if direction == '^' else santas[turn]['y']
+        santas[turn]['y'] = santas[turn]['y'] + 1 if direction == 'v' else santas[turn]['y']
 
-        if direction == '>':
-            santas[turn]['x'] += 1
-
-        if direction == '^':
-            santas[turn]['y'] -= 1
-
-        if direction == 'v':
-            santas[turn]['y'] += 1
-
-        grid = increment_grid_value(grid, santas[turn]['x'], santas[turn]['y'])
-
-        if turn == 1:
-            turn = 0
-        else:
-            turn = 1
+        grid[f"{santas[turn]['x']},{santas[turn]['y']}"] = 1
+        turn = 0 if turn else 1
 
     return len(grid)
 
