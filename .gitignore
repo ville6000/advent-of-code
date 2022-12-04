@@ -2,3 +2,6 @@
 input.txt
 output
 output.txt
+
+node_modules
+2022/package*
