@@ -95,18 +95,9 @@ function part1() {
     return column;
   }
 
-  const firsts = [];
-
-  for (let i = 0; i < columns.length; i++) {
-    for (let x = 0; x < columns[i].length; x++) {
-      if (columns[i][x].length) {
-        firsts.push(columns[i][x]);
-        break;
-      }
-    }
-  }
-
-  return firsts.join("");
+  return columns
+    .map((col) => col.filter((crate) => crate.length).shift())
+    .join("");
 }
 
 console.log("Part 1:", part1());
