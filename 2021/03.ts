@@ -15,12 +15,7 @@ function getInput(): Array<Array<number>> {
   const grid = [];
 
   for (let col = 0; col < input[0].length; col++) {
-    const gridRow = [];
-    for (let row = 0; row < input.length; row++) {
-      gridRow.push(input[row][col]);
-    }
-
-    grid.push(gridRow);
+    grid.push(input.map((item: number[]) => item[col]));
   }
 
   return grid;
