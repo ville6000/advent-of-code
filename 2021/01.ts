@@ -1,4 +1,4 @@
-const fs = require("fs");
+import fs = require("fs");
 
 function getInput(): Array<number> {
   return fs

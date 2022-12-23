@@ -1,4 +1,4 @@
-const fs = require("fs");
+import fs = require("fs");
 
 interface Instruction {
   dir: string;
@@ -24,10 +24,10 @@ function part1() {
   const horizontal = getTotal(
     instructions.filter((item) => item.dir === "forward")
   );
-  let depthNegative = getTotal(
+  const depthNegative = getTotal(
     instructions.filter((item) => item.dir === "up")
   );
-  let depthPositive = getTotal(
+  const depthPositive = getTotal(
     instructions.filter((item) => item.dir === "down")
   );
 
