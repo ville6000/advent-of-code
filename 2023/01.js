@@ -2,14 +2,12 @@ const fs = require("fs");
 const values = fs.readFileSync("01.txt", "utf8").split("\n").filter(l => l.length)
 
 const part2 = () => {
-  const total = values.map((line) => {
+  return values.map((line) => {
     const firstMatch = findFirstMatch(line)
     const lastMatch = findLastMatch(line)
 
     return Number(String(firstMatch) + String(lastMatch))
   }).reduce((prev, curr) => prev + curr)
-
-  console.log(total)
 }
 
 const findFirstMatch = (line) => {
@@ -29,13 +27,7 @@ const findFirstMatch = (line) => {
     }
   })
 
-  if (numFirst === null) {
-    return charFirst.val
-  } else if (charFirst === null) {
-    return numFirst.val
-  }
-
-  return numFirst.idx < charFirst.idx ? numFirst.val : charFirst.val
+  return getValForSum(numFirst, charFirst);
 }
 
 const findLastMatch = (line) => {
@@ -55,13 +47,16 @@ const findLastMatch = (line) => {
     }
   })
 
-  if (numLast === null) {
-    return charLast.val
-  } else if (charLast === null) {
-    return numLast.val
-  }
+  return getValForSum(numLast, charLast, true);
+}
 
-  return numLast.idx > charLast.idx ? numLast.val : charLast.val
+const getValForSum = (num, char, last = false) => {
+  if (num === null) return char.val;
+  if (char === null) return num.val;
+
+  return last
+    ? (num.idx > char.idx ? num.val : char.val)
+    : (num.idx < char.idx ? num.val : char.val);
 }
 
 const charMap = {
@@ -76,4 +71,4 @@ const charMap = {
   nine: 9,
 }
 
-part2()
+console.log(part2());
