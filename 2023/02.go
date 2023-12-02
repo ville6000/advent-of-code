@@ -27,6 +27,7 @@ const (
 
 func main() {
 	part1()
+	part2()
 }
 
 func part1() {
@@ -42,6 +43,19 @@ func part1() {
 	fmt.Println(total)
 }
 
+func part2() {
+	lines := readInput()
+	var games []Game
+
+	for _, line := range lines {
+		games = append(games, parseLine(line))
+	}
+
+	total := calculatePart2Total(games)
+
+	fmt.Println(total)
+}
+
 func calculatePart1Total(games []Game) int {
 	total := 0
 
@@ -49,6 +63,31 @@ func calculatePart1Total(games []Game) int {
 		if isValidGame(game) {
 			total += game.num
 		}
+	}
+
+	return total
+}
+
+func calculatePart2Total(games []Game) int {
+	total := 0
+	for _, game := range games {
+		leastRed := 0
+		leastGreen := 0
+		leastBlue := 0
+
+		for _, hand := range game.hands {
+			if hand.red > leastRed {
+				leastRed = hand.red
+			}
+			if hand.green > leastGreen {
+				leastGreen = hand.green
+			}
+			if hand.blue > leastBlue {
+				leastBlue = hand.blue
+			}
+		}
+
+		total += leastBlue * leastGreen * leastRed
 	}
 
 	return total
