@@ -16,13 +16,15 @@ const part1 = () => {
       const game = parseGame(line);
       let valid = game.num;
 
-      Object.keys(cubes).forEach((key) => {
-        game.hands.forEach((hand) => {
+      for (const hand of game.hands) {
+        for (const key in cubes) {
           if (hand[key] > cubes[key]) {
             valid = 0;
+            break;
           }
-        });
-      });
+        }
+        if (valid === 0) break;
+      }
 
       return valid;
     })
