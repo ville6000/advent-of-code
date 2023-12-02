@@ -26,11 +26,6 @@ const (
 )
 
 func main() {
-	part1()
-	part2()
-}
-
-func part1() {
 	lines := readInput()
 	var games []Game
 
@@ -38,21 +33,17 @@ func part1() {
 		games = append(games, parseLine(line))
 	}
 
-	total := calculatePart1Total(games)
+	part1(games)
+	part2(games)
+}
 
+func part1(games []Game) {
+	total := calculatePart1Total(games)
 	fmt.Println(total)
 }
 
-func part2() {
-	lines := readInput()
-	var games []Game
-
-	for _, line := range lines {
-		games = append(games, parseLine(line))
-	}
-
+func part2(games []Game) {
 	total := calculatePart2Total(games)
-
 	fmt.Println(total)
 }
 
