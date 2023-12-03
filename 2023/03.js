@@ -4,9 +4,8 @@ const input = fs
   .split("\n")
   .filter((l) => l.length);
 
-const part1 = () => {
+const part1 = (numbers) => {
   const grid = input.map((line) => line.split(""));
-  const numbers = findNumbers(input);
   let sum = 0;
 
   for (const number of numbers) {
@@ -18,20 +17,8 @@ const part1 = () => {
   return sum;
 };
 
-const part2 = () => {
-  const numbers = findNumbers(input);
-  const gears = findGears(input, numbers);
-  let total = 0;
-
-  for (const gear of gears) {
-    const found = numbers.filter((number) => inRange(number, gear));
-
-    if (found.length > 1) {
-      total += eval(found.map((n) => n.num).join("*"));
-    }
-  }
-
-  return total;
+const part2 = (numbers) => {
+  return findGearsTotal(input, numbers);
 };
 
 const inRange = (number, gear) => {
@@ -47,9 +34,9 @@ const inRange = (number, gear) => {
   return gear.col >= min && gear.col <= max;
 };
 
-const findGears = (input) => {
+const findGearsTotal = (input, numbers) => {
+  let total = 0;
   let row = 0;
-  const gears = [];
 
   for (const line of input) {
     const regex = /\*/g;
@@ -57,14 +44,20 @@ const findGears = (input) => {
 
     if (match !== null) {
       match.forEach((gear) => {
-        gears.push({ row, col: gear.index });
+        const found = numbers.filter((number) =>
+          inRange(number, { row, col: gear.index }),
+        );
+
+        if (found.length > 1) {
+          total += eval(found.map((n) => n.num).join("*"));
+        }
       });
     }
 
     row++;
   }
 
-  return gears;
+  return total;
 };
 
 const hasAdjecentSymbol = (grid, number) => {
@@ -114,10 +107,16 @@ const findNumbers = (input) => {
   return numbers;
 };
 
-console.time("part1");
-console.log(part1());
-console.timeEnd("part1");
+const main = () => {
+  const numbers = findNumbers(input);
 
-console.time("part2");
-console.log(part2());
-console.timeEnd("part2");
+  console.time("part1");
+  console.log(part1(numbers));
+  console.timeEnd("part1");
+
+  console.time("part2");
+  console.log(part2(numbers));
+  console.timeEnd("part2");
+};
+
+main();
