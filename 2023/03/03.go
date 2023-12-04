@@ -71,14 +71,71 @@ func max(a, b int) int {
 }
 
 func part2() int {
-	return 0
+	input := readInput()
+	numbers := findNumbers(input)
+	total := 0
+	re := regexp.MustCompile(`\*`)
+
+	for row, line := range input {
+		matches := re.FindAllStringIndex(line, -1)
+
+		for _, match := range matches {
+			var inRangeNumbers []GridNumber
+			for _, number := range numbers {
+				if inRange(number, row, match[0]) {
+					inRangeNumbers = append(inRangeNumbers, number)
+				}
+			}
+
+			total += getGearTotal(inRangeNumbers)
+		}
+	}
+
+	return total
+}
+
+func getGearTotal(numbers []GridNumber) int {
+	if len(numbers) <= 1 {
+		return 0
+	}
+
+	subTotal := 1
+	for _, number := range numbers {
+		subTotal *= number.num
+	}
+
+	return subTotal
+}
+
+func inRange(number GridNumber, row, col int) bool {
+	rows := [3]int{row - 1, row, row + 1}
+	found := false
+
+	for _, r := range rows {
+		if r == number.row {
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		return false
+	}
+
+	start := number.startIndex
+	end := number.endIndex
+
+	if number.startIndex > 0 {
+		start = number.startIndex - 1
+	}
+
+	return col >= start && col <= end
 }
 
 func findNumbers(input []string) []GridNumber {
 	var numbers []GridNumber
 
 	for row, line := range input {
-
 		re := regexp.MustCompile(`\d+`)
 		matches := re.FindAllStringIndex(line, -1)
 
