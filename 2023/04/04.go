@@ -11,7 +11,6 @@ import (
 
 type Game struct {
 	index          int
-	points         int
 	winningNumbers []int
 	numbers        []int
 }
