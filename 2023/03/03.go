@@ -16,12 +16,12 @@ type GridNumber struct {
 }
 
 func main() {
-	fmt.Println("Part 1", part1())
-	fmt.Println("Part 2", part2())
+	input := readInput()
+	fmt.Println("Part 1", part1(input))
+	fmt.Println("Part 2", part2(input))
 }
 
-func part1() int {
-	input := readInput()
+func part1(input []string) int {
 	numbers := findNumbers(input)
 	total := 0
 
@@ -70,8 +70,7 @@ func max(a, b int) int {
 	return b
 }
 
-func part2() int {
-	input := readInput()
+func part2(input []string) int {
 	numbers := findNumbers(input)
 	total := 0
 	re := regexp.MustCompile(`\*`)

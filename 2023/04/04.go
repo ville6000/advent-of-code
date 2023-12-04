@@ -18,17 +18,22 @@ type Game struct {
 
 func main() {
 	lines := readInput()
+	games := getGames(lines)
+	fmt.Println(part1(games))
+	fmt.Println(part2(games))
+}
+
+func getGames(lines []string) []Game {
 	var games []Game
 
 	for _, line := range lines {
 		games = append(games, parseLine(line))
 	}
 
-	part1(games)
-	part2(games)
+	return games
 }
 
-func part1(games []Game) {
+func part1(games []Game) int {
 	points := 0
 
 	for _, game := range games {
@@ -46,10 +51,10 @@ func part1(games []Game) {
 		points += gamePoints
 	}
 
-	fmt.Println(points)
+	return points
 }
 
-func part2(games []Game) {
+func part2(games []Game) int {
 	for i := 0; i < len(games); i++ {
 		game := games[i]
 		matchingNumbers := 0
@@ -64,7 +69,7 @@ func part2(games []Game) {
 		}
 	}
 
-	fmt.Println(len(games))
+	return len(games)
 }
 
 func parseLine(line string) Game {
