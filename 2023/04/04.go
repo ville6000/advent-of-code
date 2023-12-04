@@ -12,7 +12,6 @@ import (
 type Game struct {
 	index          int
 	points         int
-	card           string
 	winningNumbers []int
 	numbers        []int
 }
@@ -69,17 +68,14 @@ func part2(games []Game) {
 }
 
 func parseLine(line string) Game {
-	game := Game{}
 	lineParts := strings.Split(line, ":")
-	game.card = lineParts[0]
 	cardInfoParts := strings.Fields(lineParts[0])
-	game.index, _ = strconv.Atoi(cardInfoParts[1])
-
 	cardParts := strings.Split(lineParts[1], "|")
-	winningNumbers := strings.Fields(cardParts[0])
-	numbers := strings.Fields(cardParts[1])
-	game.winningNumbers = sliceAtoi(winningNumbers)
-	game.numbers = sliceAtoi(numbers)
+
+	game := Game{}
+	game.index, _ = strconv.Atoi(cardInfoParts[1])
+	game.winningNumbers = sliceAtoi(strings.Fields(cardParts[0]))
+	game.numbers = sliceAtoi(strings.Fields(cardParts[1]))
 
 	return game
 }
