@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -12,6 +13,11 @@ type ConversionMap struct {
 	destinationRangeStart int
 	sourceRangeStart      int
 	rangeLength           int
+}
+
+type Seed struct {
+	start  int
+	length int
 }
 
 func main() {
@@ -30,8 +36,23 @@ func part1(input []string) int {
 func part2(input []string) int {
 	seeds := getSeedsWithRanges(input)
 	conversionMaps := getConversionMaps(input)
+	lowestLocation := -1
 
-	return findLowestLocation(seeds, conversionMaps)
+	for _, seed := range seeds {
+		for i := 0; i < seed.length; i++ {
+			next := seed.start + i
+
+			for _, conversionMap := range conversionMaps {
+				next = convert(next, conversionMap)
+			}
+
+			if lowestLocation == -1 || next < lowestLocation {
+				lowestLocation = next
+			}
+		}
+	}
+
+	return lowestLocation
 }
 
 func getConversionMaps(input []string) [][]ConversionMap {
@@ -108,34 +129,31 @@ func extractConversionMaps(input []string, groupName string) []ConversionMap {
 
 func getSeeds(input []string) []int {
 	var seeds []int
-	parts := strings.Split(input[0], ":")
-	numbers := strings.Fields(parts[1])
+	re := regexp.MustCompile(`\d+`)
+	matches := re.FindAllString(input[0], -1)
 
-	for _, number := range numbers {
-		s := strings.TrimSpace(number)
-
-		if len(s) == 0 {
-			continue
-		}
-
-		num, _ := strconv.Atoi(s)
+	for _, match := range matches {
+		num, _ := strconv.Atoi(match)
 		seeds = append(seeds, num)
 	}
 
 	return seeds
 }
 
-func getSeedsWithRanges(input []string) []int {
+func getSeedsWithRanges(input []string) []Seed {
 	seeds := getSeeds(input)
+	var rangeSeeds []Seed
 
-	var rangedSeeds []int
 	for i := 0; i < len(seeds); i += 2 {
-		for j := 0; j < seeds[i+1]; j++ {
-			rangedSeeds = append(rangedSeeds, seeds[i]+j)
+		s := Seed{
+			start:  seeds[i],
+			length: seeds[i+1],
 		}
+
+		rangeSeeds = append(rangeSeeds, s)
 	}
 
-	return rangedSeeds
+	return rangeSeeds
 }
 
 func readInput() []string {
