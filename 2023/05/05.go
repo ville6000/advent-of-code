@@ -6,7 +6,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"sync"
 )
 
 type ConversionMap struct {
@@ -45,17 +44,6 @@ func getConversionMaps(input []string) [][]ConversionMap {
 		extractConversionMaps(input, "temperature-to-humidity map:"),
 		extractConversionMaps(input, "humidity-to-location map:"),
 	}
-}
-
-func findSeedLocation(seed int, conversionMaps [][]ConversionMap, ch chan int, group *sync.WaitGroup) {
-	defer group.Done()
-	next := seed
-
-	for _, conversionMap := range conversionMaps {
-		next = convert(next, conversionMap)
-	}
-
-	ch <- next
 }
 
 func findLowestLocation(seeds []int, conversionMaps [][]ConversionMap) int {
