@@ -62,10 +62,6 @@ func calculateTotal(hands []Hand) int {
 }
 
 func findRanks(hands []Hand) []Hand {
-	for i, hand := range hands {
-		hands[i].value = handValue(hand.cards)
-	}
-
 	slices.SortFunc(hands, func(a, b Hand) int {
 		if a.value > b.value {
 			return -1
@@ -122,16 +118,12 @@ func handValue(cards []string) int {
 			}
 		}
 
-		if total >= 5 {
-			if fiveOfAKind > largestValue {
-				largestValue = fiveOfAKind
-			}
+		if total >= 5 && fiveOfAKind > largestValue {
+			largestValue = fiveOfAKind
 		}
 
-		if total == 4 {
-			if fourOfAKind > largestValue {
-				largestValue = fourOfAKind
-			}
+		if total == 4 && fourOfAKind > largestValue {
+			largestValue = fourOfAKind
 		}
 
 		if (total == 3 || total == 2) && len(uniqueCards) == 3 {
@@ -140,20 +132,12 @@ func handValue(cards []string) int {
 			}
 		}
 
-		if total == 3 {
-			if threeOfAKind > largestValue {
-				largestValue = threeOfAKind
-			}
+		if total == 3 && threeOfAKind > largestValue {
+			largestValue = threeOfAKind
 		}
 
 		if total == 2 {
-			if len(uniqueCards) > 3 {
-				if onePair > largestValue {
-					largestValue = onePair
-				}
-			}
-
-			if twoPair > largestValue {
+			if len(uniqueCards) > 3 && onePair > largestValue {
 				largestValue = onePair
 			}
 		}
@@ -220,7 +204,7 @@ func parseHands(input []string) []Hand {
 		}
 
 		bid, _ := strconv.Atoi(parts[1])
-		value := highCard
+		value := handValue(cards)
 
 		hands = append(hands, Hand{cards, cardValues, bid, value})
 	}
