@@ -8,12 +8,6 @@ import (
 	"strings"
 )
 
-type NetworkNode struct {
-	name string
-	l    string
-	r    string
-}
-
 func main() {
 	input := readInput()
 	instructions, nodes := parseInput(input)
@@ -21,35 +15,31 @@ func main() {
 	fmt.Println("Part 1", part1(instructions, nodes))
 }
 
-func part1(instructions []string, nodes map[string]NetworkNode) int {
+func part1(instructions []string, nodes map[string]map[string]string) int {
 	i := 0
-	rounds := 0
+	rounds := 1
 	threshold := len(instructions)
 	current := "AAA"
 	target := "ZZZ"
 
 	for {
-		if i >= threshold {
-			i = 0
-		}
-
-		if instructions[i] == "R" {
-			current = nodes[current].r
-		} else if instructions[i] == "L" {
-			current = nodes[current].l
-		}
+		current = nodes[current][instructions[i]]
 
 		if current == target {
-			return rounds + 1
+			return rounds
 		}
 
 		i++
 		rounds++
+
+		if i >= threshold {
+			i = 0
+		}
 	}
 }
 
-func parseInput(input []string) ([]string, map[string]NetworkNode) {
-	nodes := make(map[string]NetworkNode)
+func parseInput(input []string) ([]string, map[string]map[string]string) {
+	nodes := make(map[string]map[string]string)
 	instructions := make([]string, 0)
 
 	for i := 0; i < len(input); i++ {
@@ -66,21 +56,20 @@ func parseInput(input []string) ([]string, map[string]NetworkNode) {
 	return instructions, nodes
 }
 
-func parseNode(input string) (string, NetworkNode) {
-	node := NetworkNode{}
+func parseNode(input string) (string, map[string]string) {
 	parts := strings.Split(input, "=")
-	node.name = strings.TrimSpace(parts[0])
-
 	re := regexp.MustCompile(`\(([^)]+)\)`)
 	matches := re.FindStringSubmatch(parts[1])
+	m := make(map[string]string)
 
 	if len(matches) > 1 {
 		parts := strings.Split(matches[1], ",")
-		node.l = strings.TrimSpace(parts[0])
-		node.r = strings.TrimSpace(parts[1])
+
+		m["L"] = strings.TrimSpace(parts[0])
+		m["R"] = strings.TrimSpace(parts[1])
 	}
 
-	return node.name, node
+	return strings.TrimSpace(parts[0]), m
 }
 
 func readInput() []string {
