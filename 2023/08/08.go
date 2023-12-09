@@ -13,6 +13,7 @@ func main() {
 	instructions, nodes := parseInput(input)
 
 	fmt.Println("Part 1", part1(instructions, nodes))
+	fmt.Println("Part 2", part2(instructions, nodes))
 }
 
 func part1(instructions []string, nodes map[string]map[string]string) int {
@@ -36,6 +37,52 @@ func part1(instructions []string, nodes map[string]map[string]string) int {
 			i = 0
 		}
 	}
+}
+
+func part2(instructions []string, nodes map[string]map[string]string) int {
+	currents := findStarts(nodes)
+	i := 0
+	rounds := 1
+	threshold := len(instructions)
+	results := make([]int, 0)
+
+	for {
+		for currKey, current := range currents {
+			currents[currKey] = nodes[current][instructions[i]]
+
+			if hasValidEnd(currents[currKey]) {
+				results = append(results, rounds)
+
+				if len(results) == len(currents) {
+					return leastCommonMultipleRange(results)
+				}
+			}
+		}
+
+		i++
+		rounds++
+
+		if i >= threshold {
+			i = 0
+		}
+	}
+}
+
+func hasValidEnd(s string) bool {
+	return s[len(s)-1] == 'Z'
+}
+
+func findStarts(nodes map[string]map[string]string) []string {
+	starts := make([]string, 0)
+
+	for key, _ := range nodes {
+		if key[len(key)-1] == 'A' {
+			starts = append(starts, key)
+		}
+	}
+
+	return starts
+
 }
 
 func parseInput(input []string) ([]string, map[string]map[string]string) {
@@ -89,4 +136,26 @@ func readInput() []string {
 	}
 
 	return fileLines
+}
+
+func greatestCommonDivisor(i, j int) int {
+	// Euclid's algorithm
+	k := i % j
+	if k == 0 {
+		return j
+	}
+	return greatestCommonDivisor(j, k)
+}
+
+func leastCommonMultiple(i, j int) int {
+	// from LCM wikipedia page
+	return i * j / greatestCommonDivisor(i, j)
+}
+
+func leastCommonMultipleRange(factors []int) (lcm int) {
+	lcm = 1
+	for _, i := range factors {
+		lcm = leastCommonMultiple(lcm, i)
+	}
+	return lcm
 }
