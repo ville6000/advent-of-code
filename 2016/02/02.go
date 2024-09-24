@@ -11,10 +11,10 @@ import (
 func main() {
 	input := getInput()
 
-	part1(input)
+	fmt.Println(part1(input))
 }
 
-func part1(input []string) {
+func part1(input []string) string {
 	start := 5
 	var code []int
 
@@ -23,7 +23,7 @@ func part1(input []string) {
 		code = append(code, start)
 	}
 
-	fmt.Print(IntToString1(code) + "\n")
+	return IntToString(code)
 }
 
 func findCode(start int, moves []string) int {
@@ -60,7 +60,12 @@ func getInput() []string {
 		fmt.Println("Error opening file:", err)
 		os.Exit(1)
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			fmt.Println("Error closing file:", err)
+		}
+	}(file)
 
 	var lines []string
 	scanner := bufio.NewScanner(file)
@@ -72,14 +77,10 @@ func getInput() []string {
 	return lines
 }
 
-func IntToString1(a []int) string {
-	b := ""
+func IntToString(a []int) string {
+	var b strings.Builder
 	for _, v := range a {
-		if len(b) > 0 {
-			b += ""
-		}
-		b += strconv.Itoa(v)
+		b.WriteString(strconv.Itoa(v))
 	}
-
-	return b
+	return b.String()
 }
